@@ -20,7 +20,7 @@ function Layout({ children }) {
         top: 0,
         zIndex: 1000
       }}>
-        <h2 style={{ fontSize: '1.5rem', fontWeight: '700' }}>OdontoCórdova</h2>
+        <h2 style={{ fontSize: '1.5rem', fontWeight: '700' }}>Dental Córdova</h2>
         <nav>
           <a href="#" style={navLinkStyle}>Inicio</a>
           <a href="#tratamientos" style={navLinkStyle}>Tratamientos</a>
@@ -59,7 +59,7 @@ function Layout({ children }) {
       </a>
 
       <footer style={{ padding: "2rem", textAlign: "center", fontSize: '0.9rem', color: '#64748b', borderTop: '1px solid #f1f5f9' }}>
-        © 2026 Clínica Dental OdontoCórdova
+        © 2026 Clínica Dental Córdova
       </footer>
     </div>
   );
