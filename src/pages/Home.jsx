@@ -1,13 +1,34 @@
 // src/pages/Home.jsx
 
-// 1. Datos de tratamientos con imágenes más estables y rápidas
+// Configuración de ruta base (Cambiar a la URL de S3 en el futuro)
+const imgBase = "/"; 
+
 const treatments = [
-  { id: 1, name: 'Limpieza Dental', img: 'https://images.unsplash.com/photo-1588776814546-1ffcf47267a5?auto=format&fit=crop&q=80&w=600' },
-  { id: 2, name: 'Ortodoncia', img: 'https://images.unsplash.com/photo-1513412305263-ce3d2e57041c?auto=format&fit=crop&q=80&w=600' },
-  { id: 3, name: 'Blanqueamiento', img: 'https://images.unsplash.com/photo-1613915611241-d602330a6c6a?auto=format&fit=crop&q=80&w=600' },
-  { id: 4, name: 'Implantes', img: 'https://images.unsplash.com/photo-1598256989800-fe5f95da9787?auto=format&fit=crop&q=80&w=600' },
-  { id: 5, name: 'Prótesis', img: 'https://images.unsplash.com/photo-1533226459364-e1e35a74e548?auto=format&fit=crop&q=80&w=600' },
-  { id: 6, name: 'Odontopediatría', img: 'https://images.unsplash.com/photo-1445527815219-ecbfec67492e?auto=format&fit=crop&q=80&w=600' },
+  { 
+    id: 1, 
+    name: 'Alineadores dentales', 
+    img: `${imgBase}alineadores-dentales.webp` 
+  },
+  { 
+    id: 2, 
+    name: 'Prótesis totales', 
+    img: `${imgBase}protesis-dentales.webp` 
+  },
+  { 
+    id: 3, 
+    name: 'Curaciones estéticas con resina', 
+    img: `${imgBase}curaciones-esteticas-con-resina.webp` 
+  },
+  { 
+    id: 4, 
+    name: 'Tratamiento con brackets (ortodoncia)', 
+    img: `${imgBase}tratamiento-con-brackets.webp` 
+  },
+  { 
+    id: 5, 
+    name: 'Blanqueamiento', 
+    img: `${imgBase}blanqueamiento.webp` 
+  },
 ];
 
 function Home() {
@@ -17,50 +38,73 @@ function Home() {
       <section style={{
         width: '100%',
         height: '70vh',
-        backgroundImage: 'linear-gradient(rgba(0,0,0,0.4), rgba(0,0,0,0.4)), url("https://images.unsplash.com/photo-1606811841689-23dfddce3e95?q=80&w=2000&auto=format&fit=crop")',
+        backgroundImage: `linear-gradient(rgba(0,0,0,0.5), rgba(0,0,0,0.5)), url("https://images.unsplash.com/photo-1606811841689-23dfddce3e95?q=80&w=2000&auto=format&fit=crop")`,
         backgroundSize: 'cover',
         backgroundPosition: 'center',
         display: 'flex',
         alignItems: 'center',
         justifyContent: 'center'
       }}>
-        <h1 style={{ color: 'white', fontSize: '3.5rem', textAlign: 'center' }}>Dental Córdova</h1>
+        <h1 style={{ 
+          color: 'white', 
+          fontSize: '3.5rem', 
+          textAlign: 'center',
+          fontWeight: '800',
+          textShadow: '2px 2px 10px rgba(0,0,0,0.3)'
+        }}>
+          Dental Córdova
+        </h1>
       </section>
 
       {/* SECCIÓN BIENVENIDA */}
       <section style={{ padding: '80px 20px', textAlign: 'center', maxWidth: '800px', margin: '0 auto' }}>
         <h2 style={{ fontSize: '2.5rem', marginBottom: '20px', color: '#0f172a' }}>Cuidamos tu sonrisa</h2>
-        <p style={{ fontSize: '1.2rem', lineHeight: '1.6', color: '#475569' }}>
-          Somos una empresa integrada por profesionales capacitados en realizar diversos tratamientos en odontología.Donde el objetivo es servirle de la mejor manera
+        <p style={{ fontSize: '1.2rem', lineHeight: '1.8', color: '#475569' }}>
+          Somos un equipo de profesionales especializados en diversos tratamientos odontológicos, 
+          comprometidos con brindarte la mejor atención para tu salud bucal y la de tu familia.
         </p>
       </section>
 
       {/* SECCIÓN TRATAMIENTOS */}
-      <section id="tratamientos" style={{ padding: '40px 20px', maxWidth: '1000px', margin: '0 auto 80px' }}>
-        <h2 style={{ textAlign: 'center', marginBottom: '40px', fontSize: '2rem', color: '#0f172a' }}>
+      <section id="tratamientos" style={{ padding: '40px 20px', maxWidth: '1100px', margin: '0 auto 80px' }}>
+        <h2 style={{ textAlign: 'center', marginBottom: '50px', fontSize: '2.2rem', color: '#0f172a' }}>
           Nuestros Tratamientos
         </h2>
         
         <div style={{
           display: 'grid',
-          gridTemplateColumns: 'repeat(auto-fit, minmax(300px, 1fr))', 
+          gridTemplateColumns: 'repeat(auto-fit, minmax(320px, 1fr))', 
           gap: '30px'
         }}>
           {treatments.map(t => (
-            <div key={t.id} style={{ 
-              overflow: 'hidden', 
-              borderRadius: '16px',
-              backgroundColor: '#fff',
-              border: '1px solid #f1f5f9'
-            }}>
-              <img 
-                src={t.img} 
-                alt={t.name} 
-                style={{ width: '100%', height: '280px', objectFit: 'cover', display: 'block' }} 
-                onError={(e) => { e.target.src = "https://images.unsplash.com/photo-1507924538820-ede94a04019d?w=600"; }}
-              />
-              <div style={{ padding: '20px', textAlign: 'center' }}>
-                <h3 style={{ fontSize: '1.3rem', color: '#1e293b', fontWeight: '500' }}>{t.name}</h3>
+            <div 
+              key={t.id} 
+              className="treatment-card"
+              style={{ 
+                overflow: 'hidden', 
+                borderRadius: '20px',
+                backgroundColor: '#fff',
+                border: '1px solid #f1f5f9',
+                boxShadow: '0 10px 15px -3px rgba(0,0,0,0.1)',
+              }}
+            >
+              <div style={{ overflow: 'hidden', height: '280px' }}>
+                <img 
+                  src={t.img} 
+                  alt={t.name} 
+                  className="treatment-img"
+                  style={{ 
+                    width: '100%', 
+                    height: '100%', 
+                    objectFit: 'cover', 
+                    display: 'block',
+                    transition: 'transform 0.5s ease'
+                  }} 
+                  onError={(e) => { e.target.src = "https://images.unsplash.com/photo-1507924538820-ede94a04019d?w=600"; }}
+                />
+              </div>
+              <div style={{ padding: '25px', textAlign: 'center' }}>
+                <h3 style={{ fontSize: '1.2rem', color: '#1e293b', fontWeight: '600' }}>{t.name}</h3>
               </div>
             </div>
           ))}
@@ -98,7 +142,7 @@ function Home() {
                 backgroundColor: '#25D366',
                 color: 'white',
                 textDecoration: 'none',
-                borderRadius: '10px',
+                borderRadius: '12px',
                 fontWeight: 'bold',
                 boxShadow: '0 4px 10px rgba(37, 211, 102, 0.3)'
               }}>
@@ -114,20 +158,23 @@ function Home() {
                 src="https://www.openstreetmap.org/export/embed.html?bbox=-76.94610983133317%2C-12.068680574744612%2C-76.94256931543352%2C-12.06632517688493&layer=mapnik" 
                 style={{ border: 'none' }}
               ></iframe>
-              <div style={{ padding: '10px', backgroundColor: 'white', textAlign: 'center' }}>
-                <a 
-                  href="https://www.openstreetmap.org/?#map=19/-12.067503/-76.944340" 
-                  target="_blank" 
-                  rel="noreferrer"
-                  style={{ fontSize: '0.8rem', color: '#0ea5e9', textDecoration: 'none' }}
-                >
-                  Ver mapa más grande
-                </a>
-              </div>
             </div>
           </div>
         </div>
       </section>
+
+      {/* Estilos para el efecto Hover */}
+      <style>{`
+        .treatment-card:hover .treatment-img {
+          transform: scale(1.1);
+        }
+        .treatment-card {
+          transition: transform 0.3s ease;
+        }
+        .treatment-card:hover {
+          transform: translateY(-5px);
+        }
+      `}</style>
     </div>
   );
 }

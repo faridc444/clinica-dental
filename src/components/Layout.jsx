@@ -1,3 +1,5 @@
+import { MessageCircle } from 'lucide-react';
+
 const navLinkStyle = {
   color: "white",
   marginLeft: "1.5rem",
@@ -32,9 +34,9 @@ function Layout({ children }) {
         {children}
       </main>
 
-      {/* BOTÓN FLOTANTE DE WHATSAPP */}
+      {/* BOTÓN FLOTANTE DE WHATSAPP ACTUALIZADO */}
       <a
-        href="https://wa.me/51999888777?text=Hola%20OdontoCórdova,%20deseo%20agendar%20una%20cita" 
+        href="https://wa.me/message/OQYK7VSSWFVRN1" 
         target="_blank"
         rel="noopener noreferrer"
         style={{
@@ -43,19 +45,20 @@ function Layout({ children }) {
           right: '20px',
           backgroundColor: '#25D366',
           color: 'white',
-          width: '60px',
-          height: '60px',
+          width: '65px',
+          height: '65px',
           borderRadius: '50%',
           display: 'flex',
           alignItems: 'center',
           justifyContent: 'center',
-          fontSize: '30px',
-          boxShadow: '0 4px 12px rgba(0,0,0,0.15)',
+          boxShadow: '0 4px 15px rgba(0,0,0,0.2)',
           zIndex: 2000,
-          textDecoration: 'none'
+          transition: 'transform 0.3s ease'
         }}
+        onMouseEnter={(e) => e.currentTarget.style.transform = 'scale(1.1)'}
+        onMouseLeave={(e) => e.currentTarget.style.transform = 'scale(1)'}
       >
-        <span>📞</span> 
+        <MessageCircle size={35} fill="white" color="#25D366" /> 
       </a>
 
       <footer style={{ padding: "2rem", textAlign: "center", fontSize: '0.9rem', color: '#64748b', borderTop: '1px solid #f1f5f9' }}>
