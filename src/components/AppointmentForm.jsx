@@ -3,21 +3,19 @@ import { Send, CheckCircle, ArrowLeft } from 'lucide-react';
 import { Link } from 'react-router-dom';
 
 const AppointmentForm = () => {
+  // 1. Estado inicial sin DNI
   const [formData, setFormData] = useState({
-    dni: '', nombre: '', telefono: '', email: '', fecha: '', hora: '09:00', observaciones: ''
+    nombre: '', telefono: '', email: '', fecha: '', hora: '09:00', observaciones: ''
   });
   const [status, setStatus] = useState('idle');
   const [errors, setErrors] = useState({});
 
-  // 1. Carga de términos restringidos desde el .env
   const restrictedTerms = useMemo(() => {
     const terms = import.meta.env.VITE_RESTRICTED_TERMS;
     return terms ? terms.split(',') : [];
   }, []);
 
-  const getMinDate = () => {
-    return new Date().toISOString().split('T')[0];
-  };
+  const getMinDate = () => new Date().toISOString().split('T')[0];
 
   const handleChange = (e) => {
     setFormData({ ...formData, [e.target.name]: e.target.value });
@@ -29,7 +27,7 @@ const AppointmentForm = () => {
     const hoy = new Date();
     hoy.setHours(0, 0, 0, 0);
 
-    if (!/^\d{8}$/.test(formData.dni)) newErrors.dni = "DNI debe tener 8 números.";
+    // Validación de teléfono (mínimo 9 dígitos)
     if (!/^\d{9,}$/.test(formData.telefono)) newErrors.telefono = "Mínimo 9 números.";
 
     if (!formData.fecha) {
@@ -41,7 +39,7 @@ const AppointmentForm = () => {
       if (diaSemana === 0) newErrors.fecha = "No atendemos domingos.";
     }
 
-    const contenido = (formData.nombre + " " + formData.observaciones).toLowerCase();
+    const contenido = (formData.nombre + " " + (formData.observaciones || "")).toLowerCase();
     if (restrictedTerms.some(term => contenido.includes(term))) {
       newErrors.observaciones = "Contenido no permitido.";
     }
@@ -55,7 +53,6 @@ const AppointmentForm = () => {
     if (Object.keys(formErrors).length > 0) return setErrors(formErrors);
 
     setStatus('loading');
-    
     const SCRIPT_URL = import.meta.env.VITE_APPS_SCRIPT_URL;
 
     try {
@@ -73,7 +70,7 @@ const AppointmentForm = () => {
 
   if (status === 'success') {
     return (
-      <div style={{ textAlign: 'center', padding: '40px', backgroundColor: '#f0fdf4', borderRadius: '15px', border: '1px solid #bbf7d0', maxWidth: '600px', margin: '0 auto' }}>
+      <div style={successContainerStyle}>
         <CheckCircle size={48} color="#22c55e" style={{ margin: '0 auto 15px' }} />
         <h3 style={{ color: '#166534', marginBottom: '10px' }}>¡Solicitud enviada!</h3>
         <p style={{ color: '#166534', marginBottom: '25px' }}>Nos comunicaremos pronto para confirmar su consulta.</p>
@@ -86,11 +83,10 @@ const AppointmentForm = () => {
     <div id="reservar" style={containerStyle}>
       <h2 style={{ textAlign: 'center', color: '#0f172a', marginBottom: '30px' }}>Solicitar Consulta</h2>
       <form onSubmit={handleSubmit} style={{ display: 'flex', flexDirection: 'column', gap: '15px' }}>
-        <div>
-          <input type="text" name="dni" placeholder="DNI" value={formData.dni} onChange={handleChange} style={errors.dni ? inputErrorStyle : inputStyle} />
-          {errors.dni && <span style={errorTextStyle}>{errors.dni}</span>}
-        </div>
-        <input type="text" name="nombre" placeholder="Nombres y Apellidos" required value={formData.nombre} onChange={handleChange} style={inputStyle} />
+        
+        {/* Campo Nombre completo */}
+        <input type="text" name="nombre" placeholder="Nombre y Apellido" required value={formData.nombre} onChange={handleChange} style={inputStyle} />
+        
         <div style={{ display: 'flex', gap: '10px' }}>
           <div style={{ flex: 1 }}>
             <input type="text" name="telefono" placeholder="Teléfono" value={formData.telefono} onChange={handleChange} style={errors.telefono ? inputErrorStyle : inputStyle} />
@@ -98,6 +94,7 @@ const AppointmentForm = () => {
           </div>
           <input type="email" name="email" placeholder="Correo electrónico" required value={formData.email} onChange={handleChange} style={{ ...inputStyle, flex: 1 }} />
         </div>
+
         <div style={{ display: 'flex', gap: '10px' }}>
           <div style={{ flex: 1 }}>
             <label style={labelStyle}>Fecha deseada</label>
@@ -113,10 +110,7 @@ const AppointmentForm = () => {
             </select>
           </div>
         </div>
-        <div>
-          <textarea name="observaciones" placeholder="Motivo de la consulta..." onChange={handleChange} style={errors.observaciones ? { ...inputErrorStyle, height: '100px' } : { ...inputStyle, height: '100px' }}></textarea>
-          {errors.observaciones && <span style={errorTextStyle}>{errors.observaciones}</span>}
-        </div>
+
         <button type="submit" disabled={status === 'loading'} style={buttonStyle}>
           {status === 'loading' ? 'Enviando...' : <><Send size={18} /> Solicitar Consulta</>}
         </button>
@@ -125,8 +119,8 @@ const AppointmentForm = () => {
   );
 };
 
-// Estilos (Sin cambios)
 const containerStyle = { padding: '40px', backgroundColor: 'white', borderRadius: '20px', boxShadow: '0 10px 25px rgba(0,0,0,0.05)', maxWidth: '600px', margin: '0 auto' };
+const successContainerStyle = { textAlign: 'center', padding: '40px', backgroundColor: '#f0fdf4', borderRadius: '15px', border: '1px solid #bbf7d0', maxWidth: '600px', margin: '0 auto' };
 const inputStyle = { padding: '12px', borderRadius: '8px', border: '1px solid #e2e8f0', fontSize: '1rem', width: '100%', outline: 'none' };
 const inputErrorStyle = { ...inputStyle, border: '1px solid #dc2626', backgroundColor: '#fef2f2' };
 const errorTextStyle = { color: '#dc2626', fontSize: '0.75rem', marginTop: '4px', display: 'block' };
