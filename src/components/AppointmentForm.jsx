@@ -56,7 +56,6 @@ const AppointmentForm = () => {
 
     setStatus('loading');
     
-    // 2. Uso de la URL de Apps Script desde el .env
     const SCRIPT_URL = import.meta.env.VITE_APPS_SCRIPT_URL;
 
     try {
