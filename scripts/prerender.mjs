@@ -39,11 +39,13 @@ function page(route, appHtml) {
     .replace('<div id="root"></div>', `<div id="root">${appHtml}</div>`);
 }
 
+// "/" -> dist/index.html ; "/reservar" -> dist/reservar.html
+// Cloudflare Pages sirve /reservar desde reservar.html sin barra final,
+// que es justo la URL canónica que declaramos.
 for (const route of routes) {
-  const outDir = path.join(dist, route.path);
-  fs.mkdirSync(outDir, { recursive: true });
-  fs.writeFileSync(path.join(outDir, 'index.html'), page(route, render(route.path)));
-  console.log('prerender:', route.path);
+  const file = route.path === '/' ? 'index.html' : `${route.path.slice(1)}.html`;
+  fs.writeFileSync(path.join(dist, file), page(route, render(route.path)));
+  console.log('prerender:', route.path, '->', file);
 }
 
 // Página 404: carga la app (que muestra el layout) pero le dice a Google que no indexe.
