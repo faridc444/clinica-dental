@@ -1,112 +1,94 @@
 // src/components/Layout.jsx
+import { useEffect } from 'react';
 import { MessageCircle, Clock, Phone, MapPin, Calendar } from 'lucide-react';
-import { Link } from 'react-router-dom';
+import { Link, useLocation } from 'react-router-dom';
+import { BUSINESS, SITE_URL, getRouteMeta } from '../seo.js';
+import { services } from '../data/services.js';
 
-const navLinkStyle = {
-  color: "#1e293b", 
-  marginLeft: "1.5rem",
-  textDecoration: "none",
-  fontSize: "0.95rem",
-  fontWeight: "500",
-  transition: "color 0.3s ease",
-};
+// Al navegar dentro de la app, actualiza título, descripción y canonical
+// (el HTML prerenderizado ya los trae; esto mantiene todo coherente después).
+function useRouteMeta() {
+  const { pathname, hash } = useLocation();
+  useEffect(() => {
+    const meta = getRouteMeta(pathname);
+    document.title = meta.title;
+    document.querySelector('meta[name="description"]')?.setAttribute('content', meta.description);
+    document.querySelector('link[rel="canonical"]')?.setAttribute('href', SITE_URL + meta.path);
+    if (hash) {
+      document.getElementById(hash.slice(1))?.scrollIntoView();
+    } else {
+      window.scrollTo(0, 0);
+    }
+  }, [pathname, hash]);
+}
 
 function Layout({ children }) {
+  useRouteMeta();
+
   return (
-    <div style={{ minHeight: '100vh', display: 'flex', flexDirection: 'column', position: 'relative' }}>
-      
-      {/* 1. BARRA SUPERIOR INFORMATIVA (Top Bar) */}
-      <div style={{ 
-        background: '#f8fafc', 
-        padding: '0.5rem 2rem', 
-        borderBottom: '1px solid #e2e8f0', 
-        display: 'flex', 
-        justifyContent: 'space-between', 
-        alignItems: 'center',
-        fontSize: '0.85rem', 
-        color: '#64748b' 
-      }}>
-        <div style={{ display: 'flex', gap: '20px' }}>
-          <span style={{ display: 'flex', alignItems: 'center', gap: '5px' }}>
-            <Clock size={14} color="#0ea5e9" /> Lun - Sáb: 9:00 AM - 9:00 PM
-          </span>
-          <span style={{ display: 'flex', alignItems: 'center', gap: '5px' }}>
-            <Phone size={14} color="#0ea5e9" /> +51 938 912 686
-          </span>
-        </div>
-        <div style={{ display: 'none', md: 'block' }}>
-          <span style={{ display: 'flex', alignItems: 'center', gap: '5px' }}>
-            <MapPin size={14} color="#0ea5e9" /> La Molina, Lima
-          </span>
-        </div>
+    <div className="site">
+      {/* 1. BARRA SUPERIOR INFORMATIVA */}
+      <div className="top-bar">
+        <span><Clock size={14} color="#0ea5e9" /> Lun - Sáb: 9:00 a. m. - 9:00 p. m.</span>
+        <a href={`tel:${BUSINESS.phoneE164}`}><Phone size={14} color="#0ea5e9" /> {BUSINESS.phoneDisplay}</a>
+        <span className="top-bar-location"><MapPin size={14} color="#0ea5e9" /> Santa Patricia, La Molina</span>
       </div>
 
-      {/* 2. HEADER PRINCIPAL (Minimalista) */}
-      <header style={{ 
-        background: "white", 
-        padding: "0.8rem 2rem", 
-        display: "flex", 
-        justifyContent: "space-between", 
-        alignItems: "center",
-        position: 'sticky', 
-        top: 0,
-        zIndex: 1000,
-        boxShadow: '0 2px 10px rgba(0,0,0,0.05)'
-      }}>
-        <h2 style={{ fontSize: '1.5rem', fontWeight: '800', color: '#0369a1' }}>
-          Dental <span style={{ color: '#0ea5e9' }}>Córdova</span>
-        </h2>
-        
-        <nav style={{ display: 'flex', alignItems: 'center' }}>
-          <Link to="/" style={navLinkStyle}>Inicio</Link>
-          <a href="/#tratamientos" style={navLinkStyle}>Tratamientos</a> {/* Mantenemos el ancla para scroll */}
-          
-          <Link 
-            to="/reservar" 
-            style={{
-              marginLeft: '2rem',
-              padding: '10px 20px',
-              backgroundColor: '#0ea5e9',
-              color: 'white',
-              textDecoration: 'none',
-              borderRadius: '8px',
-              fontWeight: '600',
-              fontSize: '0.9rem',
-              display: 'flex',
-              alignItems: 'center',
-              gap: '8px'
-            }}
-          >
+      {/* 2. HEADER PRINCIPAL */}
+      <header className="site-header">
+        <Link to="/" className="brand" aria-label="Dental Córdova, ir al inicio">
+          Dental <span>Córdova</span>
+        </Link>
+
+        <nav className="site-nav">
+          <Link to="/">Inicio</Link>
+          <Link to="/#tratamientos">Tratamientos</Link>
+          <Link to="/#contacto">Contacto</Link>
+          <Link to="/reservar" className="nav-cta">
             <Calendar size={16} /> Solicitar una consulta
           </Link>
         </nav>
       </header>
 
-      <main style={{ flex: 1 }}>
-        {children}
-      </main>
+      <main style={{ flex: 1 }}>{children}</main>
 
-      {/* BOTÓN FLOTANTE DE WHATSAPP (Se mantiene igual pero con zIndex alto) */}
+      {/* BOTÓN FLOTANTE DE WHATSAPP */}
       <a
-        href="https://wa.me/message/OQYK7VSSWFVRN1" 
+        href={BUSINESS.whatsapp}
         target="_blank"
         rel="noopener noreferrer"
-        style={{
-          position: 'fixed', bottom: '20px', right: '20px',
-          backgroundColor: '#25D366', color: 'white',
-          width: '65px', height: '65px', borderRadius: '50%',
-          display: 'flex', alignItems: 'center', justifyContent: 'center',
-          boxShadow: '0 4px 15px rgba(0,0,0,0.2)', zIndex: 2000,
-          transition: 'transform 0.3s ease'
-        }}
-        onMouseEnter={(e) => e.currentTarget.style.transform = 'scale(1.1)'}
-        onMouseLeave={(e) => e.currentTarget.style.transform = 'scale(1)'}
+        className="whatsapp-float"
+        aria-label="Escríbenos por WhatsApp"
       >
-        <MessageCircle size={35} fill="white" color="#25D366" /> 
+        <MessageCircle size={35} fill="white" color="#25D366" />
       </a>
 
-      <footer style={{ padding: "2rem", textAlign: "center", fontSize: '0.9rem', color: '#64748b', borderTop: '1px solid #f1f5f9' }}>
-        © 2026 Clínica Dental Córdova
+      {/* FOOTER con Nombre, Dirección y Teléfono (NAP) idénticos a Google Maps */}
+      <footer className="site-footer">
+        <div className="footer-grid">
+          <div>
+            <p className="footer-brand">{BUSINESS.name}</p>
+            <address>
+              {BUSINESS.street}, {BUSINESS.neighborhood}
+              <br />
+              {BUSINESS.district}, {BUSINESS.city}, Perú
+              <br />
+              Teléfono / WhatsApp: <a href={`tel:${BUSINESS.phoneE164}`}>{BUSINESS.phoneDisplay}</a>
+            </address>
+            <p>{BUSINESS.hoursDisplay}</p>
+          </div>
+          <div>
+            <p className="footer-title">Tratamientos</p>
+            <ul>
+              {services.map((s) => (
+                <li key={s.slug}>
+                  <Link to={`/${s.slug}`}>{s.name} en La Molina</Link>
+                </li>
+              ))}
+            </ul>
+          </div>
+        </div>
+        <p className="footer-copy">© {new Date().getFullYear()} {BUSINESS.name} · Dentista en La Molina</p>
       </footer>
     </div>
   );

@@ -1,110 +1,91 @@
 // src/pages/Home.jsx
-// Configuración de ruta base (Preparado para AWS S3 en el futuro)
-const imgBase = "/"; 
-
-const treatments = [
-  { id: 1, name: 'Alineadores dentales', img: `${imgBase}alineadores-dentales.webp` },
-  { id: 2, name: 'Prótesis totales', img: `${imgBase}protesis-dentales.webp` },
-  { id: 3, name: 'Curaciones estéticas con resina', img: `${imgBase}curaciones-esteticas-con-resina.webp` },
-  { id: 4, name: 'Tratamiento con brackets (ortodoncia)', img: `${imgBase}tratamiento-con-brackets.webp` },
-  { id: 5, name: 'Blanqueamiento', img: `${imgBase}blanqueamiento.webp` },
-];
+import { Link } from 'react-router-dom';
+import { BUSINESS } from '../seo.js';
+import { services } from '../data/services.js';
 
 function Home() {
   return (
     <div>
-     {/* HERO*/}
-      <section style={{
-        width: '100%',
-        height: '60vh',
-        backgroundImage: `linear-gradient(rgba(3, 105, 161, 0.6), rgba(15, 23, 42, 0.4)), url("https://images.unsplash.com/photo-1606811841689-23dfddce3e95?q=80&w=2000&auto=format&fit=crop")`,
-        backgroundSize: 'cover',
-        backgroundPosition: 'center',
-        display: 'flex',
-        flexDirection: 'column',
-        alignItems: 'center',
-        justifyContent: 'center',
-        padding: '0 20px'
-      }}>
-        <h1 style={{ 
-          color: 'white', 
-          fontSize: '4rem', 
-          textAlign: 'center', 
-          fontWeight: '900', 
-          marginBottom: '20px',
-          letterSpacing: '-1px'
-        }}>
-          Dental Córdova
-        </h1>
-        <p style={{ color: 'white', fontSize: '1.4rem', textAlign: 'center', maxWidth: '600px', fontWeight: '400' }}>
-          Cuidamos tu sonrisa.
+      {/* HERO: el H1 combina palabras clave reales + ubicación */}
+      <section className="hero">
+        <h1>Clínica dental en La Molina: ortodoncia, alineadores y estética dental</h1>
+        <p>
+          Recupera la tranquilidad de sonreír. Atención personalizada en {BUSINESS.name},
+          Santa Patricia, La Molina.
+        </p>
+        <div className="cta-buttons">
+          <Link to="/reservar" className="btn-primary">Reservar una cita</Link>
+          <a href={BUSINESS.whatsapp} target="_blank" rel="noopener noreferrer" className="btn-whatsapp">
+            WhatsApp
+          </a>
+        </div>
+      </section>
+
+      {/* BIENVENIDA */}
+      <section className="intro">
+        <h2>Tu dentista de confianza en Santa Patricia, La Molina</h2>
+        <p>
+          En {BUSINESS.name} somos un equipo de profesionales en odontología comprometidos con
+          tu salud bucal y la de tu familia. Atendemos a niños, adolescentes y adultos de La Molina
+          y distritos cercanos, con tratamientos de ortodoncia con brackets, alineadores
+          invisibles, curaciones estéticas con resina, blanqueamiento dental y prótesis dentales.
+        </p>
+        <p>
+          En cada consulta te explicamos tu diagnóstico y tus opciones con claridad, para que
+          tomes la mejor decisión sin presiones.
         </p>
       </section>
 
-      {/* SECCIÓN BIENVENIDA */}
-      <section style={{ padding: '80px 20px', textAlign: 'center', maxWidth: '800px', margin: '0 auto' }}>
-        <h2 style={{ fontSize: '2.5rem', marginBottom: '20px', color: '#0f172a' }}>Cuidamos tu sonrisa</h2>
-        <p style={{ fontSize: '1.2rem', lineHeight: '1.8', color: '#475569' }}>
-          Somos un equipo de profesionales especializados en diversos tratamientos odontológicos, 
-          comprometidos con brindarte la mejor atención para tu salud bucal y la de tu familia.
-        </p>
-      </section>
-
-      {/* SECCIÓN TRATAMIENTOS */}
-      <section id="tratamientos" style={{ padding: '40px 20px', maxWidth: '1100px', margin: '0 auto 80px' }}>
-        <h2 style={{ textAlign: 'center', marginBottom: '50px', fontSize: '2.2rem', color: '#0f172a' }}>
-          Nuestros Tratamientos
-        </h2>
-        <div style={{ display: 'grid', gridTemplateColumns: 'repeat(auto-fit, minmax(320px, 1fr))', gap: '30px' }}>
-          {treatments.map(t => (
-            <div key={t.id} className="treatment-card" style={{ overflow: 'hidden', borderRadius: '20px', backgroundColor: '#fff', border: '1px solid #f1f5f9', boxShadow: '0 10px 15px -3px rgba(0,0,0,0.1)' }}>
-              <div style={{ overflow: 'hidden', height: '280px' }}>
-                <img src={t.img} alt={t.name} className="treatment-img" style={{ width: '100%', height: '100%', objectFit: 'cover', display: 'block', transition: 'transform 0.5s ease' }} 
-                  onError={(e) => { e.target.src = "https://images.unsplash.com/photo-1507924538820-ede94a04019d?w=600"; }}
+      {/* TRATAMIENTOS: cada tarjeta enlaza a su propia página */}
+      <section id="tratamientos" className="treatments">
+        <h2>Nuestros tratamientos dentales</h2>
+        <div className="treatment-grid">
+          {services.map((s) => (
+            <Link key={s.slug} to={`/${s.slug}`} className="treatment-card">
+              <div className="treatment-img-wrap">
+                <img
+                  src={s.img}
+                  alt={`${s.name} en La Molina`}
+                  className="treatment-img"
+                  loading="lazy"
+                  width="400"
+                  height="280"
                 />
               </div>
-              <div style={{ padding: '25px', textAlign: 'center' }}>
-                <h3 style={{ fontSize: '1.2rem', color: '#1e293b', fontWeight: '600' }}>{t.name}</h3>
+              <div className="treatment-text">
+                <h3>{s.name}</h3>
+                <p>{s.short}</p>
+                <span className="more">Ver tratamiento →</span>
               </div>
-            </div>
+            </Link>
           ))}
         </div>
       </section>
-          
-      {/* SECCIÓN CONTACTO Y MAPA */}
-      <section id="contacto" style={{ padding: '80px 20px', backgroundColor: '#f8fafc' }}>
-        <div style={{ maxWidth: '1000px', margin: '0 auto' }}>
-          <h2 style={{ fontSize: '2.3rem', color: '#0f172a', marginBottom: '40px', textAlign: 'center' }}>Visítanos en nuestra sede</h2>
-          <div style={{ display: 'flex', flexWrap: 'wrap', justifyContent: 'center', gap: '40px' }}>
-            <div style={{ flex: '1 1 320px', textAlign: 'left', padding: '20px' }}>
-              <h3 style={{ color: '#0ea5e9', marginBottom: '20px', fontSize: '1.5rem' }}>Contacto Directo</h3>
-              <p style={{ fontSize: '1.1rem', marginBottom: '10px' }}>📍 <strong>Dirección:</strong> Ca. Piura 104 (3er piso), Urb. Santa Patricia, La Molina.</p>
-              <p style={{ fontSize: '1.1rem', marginBottom: '10px' }}>⏰ <strong>Atención:</strong> Lunes a Sábado de 9:00 AM a 9:00 PM</p>
-              <p style={{ fontSize: '1.1rem', marginBottom: '20px' }}>📞 <strong>WhatsApp:</strong> +51 938 912 686</p>
-              <a href="https://wa.me/message/OQYK7VSSWFVRN1" target="_blank" rel="noreferrer" style={{ display: 'inline-block', padding: '15px 30px', backgroundColor: '#25D366', color: 'white', textDecoration: 'none', borderRadius: '12px', fontWeight: 'bold' }}>
-                Reservar Cita por WhatsApp
-              </a>
-            </div>
-            <div style={{ borderRadius: '20px', overflow: 'hidden', boxShadow: '0 10px 25px rgba(0,0,0,0.1)', border: '1px solid #e2e8f0', width: '400px', height: '300px' }}>
-              <iframe 
-                src="https://www.google.com/maps/embed?pb=!1m18!1m12!1m3!1d1950.803738410283!2d-76.94434!3d-12.067503!2m3!1f0!2f0!3f0!3m2!1i1024!2i768!4f13.1!3m3!1m2!1s0x9105c701cc3a81cb%3A0x67456d69a94f6959!2sDentistas%20C%C3%B3rdova!5e0!3m2!1ses-419!2spe!4v1737602381234!5m2!1ses-419!2spe" 
-                width="400" 
-                height="300" 
-                style={{ border: 0 }} 
-                allowFullScreen="" 
-                loading="lazy" 
-                referrerPolicy="no-referrer-when-downgrade"
-              ></iframe>
-            </div>
+
+      {/* CONTACTO Y MAPA */}
+      <section id="contacto" className="contact">
+        <h2>Visítanos en Santa Patricia, La Molina</h2>
+        <div className="contact-grid">
+          <div className="contact-info">
+            <h3>Contacto directo</h3>
+            <p>📍 <strong>Dirección:</strong> {BUSINESS.street}, {BUSINESS.neighborhood}, {BUSINESS.district}.</p>
+            <p>⏰ <strong>Atención:</strong> {BUSINESS.hoursDisplay}</p>
+            <p>📞 <strong>Teléfono / WhatsApp:</strong> <a href={`tel:${BUSINESS.phoneE164}`}>{BUSINESS.phoneDisplay}</a></p>
+            <a href={BUSINESS.whatsapp} target="_blank" rel="noopener noreferrer" className="btn-whatsapp">
+              Reservar cita por WhatsApp
+            </a>
+          </div>
+          <div className="map">
+            <iframe
+              title={`Ubicación de ${BUSINESS.name} en Google Maps`}
+              src="https://www.google.com/maps/embed?pb=!1m18!1m12!1m3!1d1950.803738410283!2d-76.94434!3d-12.067503!2m3!1f0!2f0!3f0!3m2!1i1024!2i768!4f13.1!3m3!1m2!1s0x9105c701cc3a81cb%3A0x67456d69a94f6959!2sDentistas%20C%C3%B3rdova!5e0!3m2!1ses-419!2spe!4v1737602381234!5m2!1ses-419!2spe"
+              allowFullScreen=""
+              loading="lazy"
+              referrerPolicy="no-referrer-when-downgrade"
+            ></iframe>
           </div>
         </div>
       </section>
-
-      <style>{`
-        .treatment-card:hover .treatment-img { transform: scale(1.1); }
-        .treatment-card { transition: transform 0.3s ease; }
-        .treatment-card:hover { transform: translateY(-5px); }
-      `}</style>
     </div>
   );
 }
