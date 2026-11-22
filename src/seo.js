@@ -58,11 +58,18 @@ export const dentistJsonLd = {
   telephone: BUSINESS.phoneE164,
   image: `${SITE_URL}/tratamiento-con-brackets.webp`,
   priceRange: '$$',
+  foundingDate: '2008-09',
+  sameAs: [
+    'https://www.facebook.com/dentalcordovalima',
+    'https://www.instagram.com/dentalcordovalima/',
+    'https://www.tiktok.com/@dentalcordova',
+  ],
   address: {
     '@type': 'PostalAddress',
     streetAddress: `${BUSINESS.street}, ${BUSINESS.neighborhood}`,
     addressLocality: BUSINESS.district,
     addressRegion: BUSINESS.city,
+    postalCode: '15024',
     addressCountry: BUSINESS.country,
   },
   areaServed: ['La Molina', 'Santa Patricia', 'Ate', 'Surco', 'Lima'],
